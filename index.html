@@ -2,42 +2,64 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=video-width,initial-scale=1" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Marya Sahiba — Cinematic Intro</title>
 <style>
   :root{
     --bg:#050005;--accent:#ff4d94;--soft:#ffffffcc;--muted:#c9c9d1;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:#000;font-family:Inter,Arial;color:#fff;overflow:hidden}
-  .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px}
-  .viewport{
-    position:relative;width:1080px;height:1080px;max-width:96vw;max-height:96vh;
-    border-radius:14px;overflow:hidden;margin:auto;
-    box-shadow:0 40px 100px rgba(0,0,0,.7);background:#000;
+  html,body{
+    height:100%;margin:0;background:#000;
+    font-family:Inter,Arial;color:#fff;overflow:hidden
   }
+  .stage{
+    position:fixed;inset:0;display:flex;
+    align-items:center;justify-content:center;padding:20px
+  }
+  .viewport{
+    position:relative;width:100%;height:100%;
+    border-radius:0;overflow:hidden;margin:auto;
+    background:#000;
+  }
+
   /* start button */
   #startBtn{
     position:absolute;inset:0;margin:auto;z-index:300;
     width:220px;height:70px;font-size:22px;font-weight:bold;
     background:linear-gradient(45deg,#ff0080,#ff8c00);
     border:none;border-radius:14px;color:#fff;cursor:pointer;
-    box-shadow:0 0 25px rgba(255,0,128,0.8);animation:glow 1.5s infinite alternate;
+    box-shadow:0 0 25px rgba(255,0,128,0.8);
+    animation:glow 1.5s infinite alternate;
   }
-  @keyframes glow{from{box-shadow:0 0 15px #ff0080;}to{box-shadow:0 0 40px #ff0080;}}
+  @keyframes glow{
+    from{box-shadow:0 0 15px #ff0080;}
+    to{box-shadow:0 0 40px #ff0080;}
+  }
 
-  .intro-plate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px;z-index:20;opacity:0;transition:opacity .5s}
+  .intro-plate{
+    position:absolute;inset:0;display:flex;
+    flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:36px;z-index:20;
+    opacity:0;transition:opacity .5s
+  }
   .lines{max-width:86%;}
-  .line{opacity:0;transform:translateY(12px);font-size:clamp(20px,3.2vw,36px);margin:8px 0;transition:all .4s}
+  .line{
+    opacity:0;transform:translateY(12px);
+    font-size:clamp(20px,3.2vw,36px);margin:8px 0;
+    transition:all .4s
+  }
   .line.show{opacity:1;transform:translateY(0);}
   .typing{border-right:.14em solid rgba(255,255,255,.85);padding-right:6px}
 
   /* Cinematic text */
   .big-zoom{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    position:absolute;inset:0;display:flex;
+    align-items:center;justify-content:center;
     font-size:clamp(32px,6vw,72px);font-weight:bold;
     color:var(--accent);opacity:0;z-index:22;
-    text-shadow:0 0 30px rgba(255,77,148,0.9),0 0 60px rgba(255,140,0,0.7);
+    text-shadow:0 0 30px rgba(255,77,148,0.9),
+                0 0 60px rgba(255,140,0,0.7);
     transform:scale(0.5);
     transition:opacity 1s ease, transform 1s ease;
     pointer-events:none;
@@ -45,17 +67,34 @@
   .big-zoom.show{opacity:1;transform:scale(1.2);}
   .big-zoom.hide{opacity:0;transform:scale(0.2);}
 
-  .flash{position:absolute;inset:0;z-index:50;background:#fff;opacity:0;transition:opacity .4s}
-  video#mainVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:10;opacity:0;transition:opacity .8s}
+  .flash{
+    position:absolute;inset:0;z-index:50;
+    background:#fff;opacity:0;transition:opacity .4s
+  }
+
+  /* ✅ FIXED: Video full fit without cutting */
+  video#mainVideo{
+    position:absolute;inset:0;
+    width:100%;height:100%;
+    object-fit:contain;   /* maintain aspect ratio, no crop */
+    background:black;     /* black bars on empty space */
+    z-index:10;opacity:0;
+    transition:opacity .8s
+  }
   video#mainVideo.playing{opacity:1}
-  .skip{position:absolute;right:12px;top:12px;z-index:200;font-size:13px;cursor:pointer;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.35)}
+
+  .skip{
+    position:absolute;right:12px;top:12px;z-index:200;
+    font-size:13px;cursor:pointer;padding:8px 10px;
+    border-radius:8px;background:rgba(0,0,0,.35)
+  }
 </style>
 </head>
 <body>
   <div class="stage">
     <div class="viewport" id="viewport">
       <!-- Start button -->
-      <button id="startBtn">👉 Start my cutie pie ❤️</button>
+      <button id="startBtn">👉 Start my cutie pie 😘❤️</button>
 
       <div class="intro-plate" id="introPlate">
         <div class="lines">
@@ -146,7 +185,3 @@ skipBtn.addEventListener('click',()=>{
 </script>
 </body>
 </html>
-
-
-
-
