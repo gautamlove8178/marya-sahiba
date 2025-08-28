@@ -3,414 +3,146 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Marya Sahiba — Cinematic Intro (Khatarnaak)</title>
+<title>Marya Sahiba — Cinematic Intro</title>
 <style>
   :root{
-    --bg:#050005;
-    --accent:#ff4d94;
-    --soft:#ffffffcc;
-    --muted:#c9c9d1;
+    --bg:#050005;--accent:#ff4d94;--soft:#ffffffcc;--muted:#c9c9d1;
   }
   *{box-sizing:border-box}
-  html,body{height:100%;margin:0;background:radial-gradient(1200px 600px at 50% 20%, #100014 0%, #040006 40%, #000 100%);font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Arial;color:#fff;overflow:hidden}
+  html,body{height:100%;margin:0;background:#000;font-family:Inter,Arial;color:#fff;overflow:hidden}
   .stage{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:20px}
   .viewport{
-  position:relative;
-  width:1080px;
-  height:1500px;
-  max-width:96vw;
-  max-height:96vh;
-  border-radius:14px;
-  overflow:hidden;
-  margin:auto;
-  box-shadow:0 40px 100px rgba(0,0,0,.7), inset 0 1px 0 rgba(255,255,255,.02);
-  background:linear-gradient(180deg, rgba(10,6,14,0.6), rgba(0,0,0,0.8));
-  transform-origin:center;
-}
-
-
-  /* Canvases & overlays */
-  canvas{position:absolute;inset:0;z-index:6;pointer-events:none;display:block}
-  .grain{position:absolute;inset:0;z-index:40;pointer-events:none;mix-blend-mode:overlay;opacity:.18;background-image:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200"><filter id="n"><feTurbulence baseFrequency="0.9" numOctaves="1" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)"/></svg>');background-size:200px 200px}
-
-  /* Intro plate text */
-  .intro-plate{
-    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px;z-index:20;
-    background:linear-gradient(180deg, rgba(0,0,0,0.06), rgba(0,0,0,0.12));
+    position:relative;width:1080px;height:1500px;max-width:96vw;max-height:96vh;
+    border-radius:14px;overflow:hidden;margin:auto;
+    box-shadow:0 40px 100px rgba(0,0,0,.7);background:#000;
   }
+  /* start button */
+  #startBtn{
+    position:absolute;inset:0;margin:auto;z-index:300;
+    width:220px;height:70px;font-size:22px;font-weight:bold;
+    background:linear-gradient(45deg,#ff0080,#ff8c00);
+    border:none;border-radius:14px;color:#fff;cursor:pointer;
+    box-shadow:0 0 25px rgba(255,0,128,0.8);animation:glow 1.5s infinite alternate;
+  }
+  @keyframes glow{from{box-shadow:0 0 15px #ff0080;}to{box-shadow:0 0 40px #ff0080;}}
+
+  .intro-plate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:36px;z-index:20;opacity:0;transition:opacity .5s}
   .lines{max-width:86%;}
-  .line{
-    opacity:0;
-    transform:translateY(12px) scale(0.995);
-    color:var(--soft);
-    font-size:clamp(20px,3.2vw,36px);
-    line-height:1.05;
-    margin:8px 0;
-    letter-spacing:0.4px;
-    text-shadow:0 0 10px rgba(255,77,148,0.06);
-    transition:all 420ms cubic-bezier(.2,.9,.3,1);
-  }
-  .line.show{opacity:1;transform:translateY(0) scale(1); text-shadow:0 0 28px rgba(255,77,148,0.85);}
-  .typing{border-right:.14em solid rgba(255,255,255,0.85);padding-right:6px}
+  .line{opacity:0;transform:translateY(12px);font-size:clamp(20px,3.2vw,36px);margin:8px 0;transition:all .4s}
+  .line.show{opacity:1;transform:translateY(0);}
+  .typing{border-right:.14em solid rgba(255,255,255,.85);padding-right:6px}
 
-  .sub{color:var(--muted);font-size:13px;margin-top:12px;opacity:.95}
-
-  /* dramatic zoom text */
+  /* Cinematic text */
   .big-zoom{
-    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;z-index:22;pointer-events:none;
-    font-size:clamp(28px,6vw,64px);color:var(--accent);opacity:0;transform:scale(.94);
-    text-shadow:0 0 40px rgba(255,77,148,0.9);
-    transition:opacity .35s ease, transform .7s cubic-bezier(.2,.9,.3,1);
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    font-size:clamp(32px,6vw,72px);font-weight:bold;
+    color:var(--accent);opacity:0;z-index:22;
+    text-shadow:0 0 30px rgba(255,77,148,0.9),0 0 60px rgba(255,140,0,0.7);
+    transform:scale(0.5);
+    transition:opacity 1s ease, transform 1s ease;
+    pointer-events:none;
   }
-  .big-zoom.show{opacity:1;transform:scale(1)}
+  .big-zoom.show{opacity:1;transform:scale(1.2);}
+  .big-zoom.hide{opacity:0;transform:scale(0.2);}
 
-  /* flash */
-  .flash{position:absolute;inset:0;z-index:50;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,0.85),rgba(255,77,148,0.22));opacity:0;mix-blend-mode:screen}
-
-  /* video */
-  video#mainVideo{
-    position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:10;opacity:0;transform:scale(1.06);
-    transition:opacity 950ms ease, transform 950ms cubic-bezier(.2,.9,.3,1);background:#000;
-  }
-  video#mainVideo.playing{opacity:1;transform:scale(1)}
-
-  /* vignette */
-  .vignette{position:absolute;inset:0;z-index:60;pointer-events:none;background:radial-gradient(60% 40% at 50% 30%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.12) 45%, rgba(0,0,0,0.6) 100%);mix-blend-mode:multiply}
-
-  /* UI */
-  .ui{position:absolute;left:16px;bottom:14px;z-index:120;display:flex;gap:8px;align-items:center}
-  .btn{background:linear-gradient(180deg,#fff,#efefef);color:#000;border-radius:11px;padding:10px 14px;font-weight:700;border:0;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.45)}
-  .ghost{background:transparent;border:1px solid rgba(255,255,255,.08);color:#fff;padding:8px 10px;border-radius:10px;cursor:pointer}
-  .skip{position:absolute;right:12px;top:12px;z-index:200;color:#fff;opacity:.85;font-size:13px;cursor:pointer;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.04)}
-
-  /* responsive */
-  
+  .flash{position:absolute;inset:0;z-index:50;background:#fff;opacity:0;transition:opacity .4s}
+  video#mainVideo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:10;opacity:0;transition:opacity .8s}
+  video#mainVideo.playing{opacity:1}
+  .skip{position:absolute;right:12px;top:12px;z-index:200;font-size:13px;cursor:pointer;padding:8px 10px;border-radius:8px;background:rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
   <div class="stage">
     <div class="viewport" id="viewport">
-      <!-- particle canvases -->
-      <canvas id="bokeh"></canvas>
-      <canvas id="hearts"></canvas>
-      <canvas id="fireworks"></canvas>
+      <!-- Start button -->
+      <button id="startBtn">👉 Start ❤️</button>
 
-      <!-- intro plate -->
-      <div class="intro-plate" id="introPlate" aria-live="polite">
-        <div class="lines" id="linesWrap" aria-hidden="true">
+      <div class="intro-plate" id="introPlate">
+        <div class="lines">
           <div class="line" id="l1"></div>
           <div class="line" id="l2"></div>
           <div class="line" id="l3"></div>
         </div>
-        <div class="sub">Play karo — aur dekho zindagi ka cinematic pal😘😘.</div>
+        <div class="sub">Dekho zindagi ka cinematic pal 😘</div>
       </div>
 
-      <!-- big zoom text -->
-      <div class="big-zoom" id="zoomText">    </div>
-
-      <!-- flash -->
+      <div class="big-zoom" id="zoomText"></div>
       <div class="flash" id="flash"></div>
 
-      <!-- video -->
-      <!-- Note: filename has a space — if you prefer, rename file to marya_sahiba.mp4 and change src -->
-      <video id="mainVideo" src="marya%20sahiba.mp4" playsinline preload="auto" muted></video>
-
-      <div class="grain" aria-hidden="true"></div>
-      <div class="vignette" aria-hidden="true"></div>
-
-      <!-- UI -->
-      <div class="ui" id="ui">
-        <button class="btn" id="playBtn">▶ Play · Unmute</button>
-        <button class="ghost" id="replayBtn" style="display:none">↺ Replay Intro</button>
-      </div>
+      <video id="mainVideo" src="marya sahiba.mp4" playsinline preload="auto" loop></video>
+      <audio id="bgAudio" src="romantic.mp3" preload="auto" loop></audio>
 
       <div class="skip" id="skip">Skip Intro</div>
     </div>
   </div>
 
 <script>
-/* ================= CONFIG / TEXT ================= */
-const LINES = [
-  "🌙 Raat ke andhere mein tera naam gungunata hoon...",
-  "💖 Har dhadkan bas ek hi dua maangti hai — tu saath rahe.",
-  "✨ Ab ek pal aisa aayega jo hamesha yaad rahega..."
+const LINES=[
+ "🌙 Raat ke andhere mein tera naam gungunata hoon...",
+ "💖 Har dhadkan bas ek hi dua maangti hai — tu saath rahe.",
+ "✨ Ab ek pal aisa aayega jo hamesha yaad rahega..."
 ];
-const TYPING_SPEED = 36;    // ms per char
-const BETWEEN = 700;        // pause after line typed
-const ZOOM_AFTER = 650;     // ms after last line to show big-zoom
-const FLASH_MS = 420;       // film flash duration
-const FALLBACK_MS = 6000;   // fallback start if user doesn't interact
+const l1=document.getElementById('l1'),
+      l2=document.getElementById('l2'),
+      l3=document.getElementById('l3');
+const introPlate=document.getElementById('introPlate'),
+      mainVideo=document.getElementById('mainVideo'),
+      bgAudio=document.getElementById('bgAudio'),
+      flash=document.getElementById('flash'),
+      zoomText=document.getElementById('zoomText'),
+      startBtn=document.getElementById('startBtn'),
+      skipBtn=document.getElementById('skip');
 
-/* ================ ELEMENTS ================ */
-const viewport = document.getElementById('viewport');
-const l1 = document.getElementById('l1'), l2 = document.getElementById('l2'), l3 = document.getElementById('l3');
-const introPlate = document.getElementById('introPlate');
-const mainVideo = document.getElementById('mainVideo');
-const playBtn = document.getElementById('playBtn');
-const replayBtn = document.getElementById('replayBtn');
-const skipBtn = document.getElementById('skip');
-const flash = document.getElementById('flash');
-const zoomText = document.getElementById('zoomText');
-
-/* ================ PARTICLE SYSTEMS ================ */
-/* Bokeh: soft drifting glow orbs */
-const bokehCanvas = document.getElementById('bokeh');
-const heartsCanvas = document.getElementById('hearts');
-const fwCanvas = document.getElementById('fireworks');
-const bCtx = bokehCanvas.getContext('2d');
-const hCtx = heartsCanvas.getContext('2d');
-const fCtx = fwCanvas.getContext('2d');
-
-let W=0,H=0;
-function resizeAll(){
-  const rect = viewport.getBoundingClientRect();
-  W = bokehCanvas.width = heartsCanvas.width = fwCanvas.width = Math.max(1, rect.width);
-  H = bokehCanvas.height = heartsCanvas.height = fwCanvas.height = Math.max(1, rect.height);
-}
-window.addEventListener('resize', resizeAll);
-resizeAll();
-
-/* ---- bokeh particles ---- */
-let bokeh = [];
-function initBokeh(){
-  bokeh = [];
-  for(let i=0;i<18;i++){
-    bokeh.push({
-      x: Math.random()*W,
-      y: Math.random()*H,
-      r: Math.random()*80 + 20,
-      vx: (Math.random()-0.5)*0.12,
-      vy: (Math.random()-0.5)*0.2,
-      alpha: Math.random()*0.12 + 0.04,
-      hue: 320 + Math.random()*30
-    });
-  }
-}
-initBokeh();
-
-function drawBokeh(){
-  bCtx.clearRect(0,0,W,H);
-  for(const p of bokeh){
-    p.x += p.vx; p.y += p.vy;
-    if(p.x < -200) p.x = W + 200;
-    if(p.x > W + 200) p.x = -200;
-    if(p.y < -200) p.y = H + 200;
-    if(p.y > H + 200) p.y = -200;
-    const g = bCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r);
-    g.addColorStop(0, `hsla(${p.hue},85%,60%,${p.alpha})`);
-    g.addColorStop(1, `rgba(0,0,0,0)`);
-    bCtx.fillStyle = g;
-    bCtx.fillRect(p.x - p.r, p.y - p.r, p.r*2, p.r*2);
-  }
-}
-
-/* ---- hearts ---- */
-let hearts = [];
-function spawnHeart(x){
-  hearts.push({
-    x: x || (Math.random()*W),
-    y: H + 20,
-    vx: (Math.random()-0.5)*1.2,
-    vy: - (Math.random()*1.8 + 2.0),
-    size: Math.random()*18 + 10,
-    rot: Math.random()*Math.PI*2,
-    spin: (Math.random()-0.5)*0.02,
-    life: 220 + Math.random()*120
-  });
-}
-function drawHearts(){
-  hCtx.clearRect(0,0,W,H);
-  for(let i = hearts.length - 1; i >= 0; i--){
-    const p = hearts[i];
-    p.x += p.vx; p.y += p.vy; p.rot += p.spin; p.life--;
-    const alpha = Math.max(0, Math.min(1, p.life/220));
-    drawHeartShape(hCtx, p.x, p.y, p.size, alpha);
-    if(p.life<=0 || p.y < -80) hearts.splice(i,1);
-  }
-}
-function drawHeartShape(ctx,x,y,s,alpha){
-  ctx.save();
-  ctx.translate(x,y);
-  ctx.rotate(0.3); // slight tilt
-  ctx.scale(1,1);
-  ctx.globalAlpha = alpha;
-  ctx.fillStyle = `rgba(255,77,148,${alpha})`;
-  ctx.beginPath();
-  const top = -s*0.25;
-  ctx.moveTo(0, top + s*0.2);
-  ctx.bezierCurveTo(0, top, -s*0.5, top, -s*0.5, top + s*0.2);
-  ctx.bezierCurveTo(-s*0.5, top + (s*0.6), 0, top + (s*0.9), 0, top + s);
-  ctx.bezierCurveTo(0, top + (s*0.9), s*0.5, top + (s*0.6), s*0.5, top + s*0.2);
-  ctx.bezierCurveTo(s*0.5, top, 0, top, 0, top + s*0.2);
-  ctx.closePath();
-  ctx.fill();
-  ctx.restore();
-}
-
-/* ---- fireworks ---- */
-let fw = [];
-function explodeAt(x,y){
-  const hue = Math.floor(Math.random()*360);
-  for(let i=0;i<36;i++){
-    const angle = Math.PI*2*(i/36) + (Math.random()-0.5)*0.18;
-    const speed = 2 + Math.random()*4;
-    fw.push({x,y,vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:40 + Math.random()*40, hue, r:1.2 + Math.random()*2.6});
-  }
-}
-function drawFireworks(){
-  fCtx.fillStyle = 'rgba(0,0,0,0.18)';
-  fCtx.fillRect(0,0,W,H);
-  for(let i = fw.length - 1; i >= 0; i--){
-    const p = fw[i];
-    p.x += p.vx; p.y += p.vy; p.vy += 0.06; p.life--;
-    const alpha = Math.max(0, p.life / 80);
-    fCtx.beginPath();
-    fCtx.arc(p.x, p.y, p.r, 0, Math.PI*2);
-    fCtx.fillStyle = `hsla(${p.hue},90%,60%,${alpha})`;
-    fCtx.fill();
-    if(p.life<=0 || p.y>H+50) fw.splice(i,1);
-  }
-}
-
-/* animation master */
-let rafId;
-function animateAll(){
-  drawBokeh();
-  drawHearts();
-  drawFireworks();
-  rafId = requestAnimationFrame(animateAll);
-}
-animateAll();
-
-/* periodically spawn gentle hearts */
-let heartSpawner = setInterval(()=>spawnHeart(), 420);
-let fireworkSpawner = setInterval(()=>{
-  // random fireworks across top area
-  const x = Math.random()*W;
-  const y = Math.random()*(H*0.45) + 20;
-  explodeAt(x,y);
-}, 1500);
-
-/* ================= TYPING / INTRO SEQUENCE ================= */
-function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
-
-async function typeText(el, text, speed){
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+async function typeText(el,txt){
   el.classList.add('typing');
-  el.style.opacity = 1;
-  el.style.transform = 'translateY(0) scale(1)';
-  el.textContent = '';
-  for(const ch of text){
-    el.textContent += ch;
-    await sleep(speed);
-  }
+  el.style.opacity=1;
+  el.textContent='';
+  for(const ch of txt){el.textContent+=ch;await sleep(36);}
   el.classList.remove('typing');
 }
 
-let introPlayed = false;
-async function runIntroSequence(){
-  // ensure fresh
-  [l1,l2,l3].forEach(e=>{ e.textContent=''; e.classList.remove('show'); e.style.opacity=0; e.style.transform='translateY(12px) scale(.995)'; });
+async function runIntro(){
+  introPlate.style.opacity=1;
+  await typeText(l1,LINES[0]); l1.classList.add('show'); await sleep(700);
+  await typeText(l2,LINES[1]); l2.classList.add('show'); await sleep(700);
+  await typeText(l3,LINES[2]); l3.classList.add('show'); await sleep(700);
 
-  await typeText(l1, LINES[0], TYPING_SPEED); l1.classList.add('show'); await sleep(BETWEEN);
-  await typeText(l2, LINES[1], TYPING_SPEED); l2.classList.add('show'); await sleep(BETWEEN);
-  await typeText(l3, LINES[2], TYPING_SPEED); l3.classList.add('show');
-
-  await sleep(ZOOM_AFTER);
+  // Cinematic Magic animation
+  zoomText.textContent="💥 Cinematic Magic 💥";
   zoomText.classList.add('show');
+  await sleep(1500);
 
-  // small cinematic pause, then big flash + explode fireworks for punch
-  await sleep(520);
-  flash.style.transition = `opacity ${FLASH_MS}ms ease`;
-  flash.style.opacity = 1;
-  // bigger firework burst center
-  explodeAt(W*0.5, H*0.38);
-  setTimeout(()=>{ flash.style.opacity = 0; }, FLASH_MS);
-  await sleep(FLASH_MS + 160);
+  // Flash effect
+  flash.style.opacity=1;
+  setTimeout(()=>flash.style.opacity=0,400);
 
-  // fade intro plate out gracefully
-  introPlate.style.transition = 'opacity 520ms ease, transform 520ms ease';
-  introPlate.style.opacity = 0;
-  introPlate.style.transform = 'translateY(-10px) scale(.995)';
-  zoomText.style.transition = 'opacity 420ms ease, transform 520ms ease'; zoomText.style.opacity = 0;
-  await sleep(520);
+  // Hide cinematic text
+  zoomText.classList.remove('show');
+  zoomText.classList.add('hide');
 
-  // start video
+  // Hide intro & start video
+  introPlate.style.opacity=0;
+  await sleep(900);
   startVideo();
 }
 
-/* ================= VIDEO CONTROL ================= */
 async function startVideo(){
-  // stop intense spawns a little to keep resources low while playing
-  clearInterval(heartSpawner);
-  clearInterval(fireworkSpawner);
-  // show & attempt play
   mainVideo.classList.add('playing');
-  try{
-    // try play; some browsers block unmute autoplay; we keep video muted=false only on user gesture
-    await mainVideo.play();
-  }catch(e){
-    // autoplay blocked; show playBtn for user to press (already visible)
-  }
-  playBtn.style.display = 'none';
-  replayBtn.style.display = 'inline-block';
-  introPlayed = true;
+  try{await mainVideo.play();}catch(e){console.log(e);}
+  try{await bgAudio.play();}catch(e){console.log(e);}
 }
 
-/* Play button: user gesture to unmute & run intro */
-playBtn.addEventListener('click', async ()=>{
-  try{
-    mainVideo.muted = false;
-    mainVideo.volume = 0.95;
-  }catch(e){}
-  if(!introPlayed){
-    playBtn.disabled = true;
-    await runIntroSequence();
-    playBtn.disabled = false;
-  } else {
-    // already played intro — just resume/unmute
-    try { await mainVideo.play(); mainVideo.classList.add('playing'); } catch(e) {}
-  }
+startBtn.addEventListener('click',()=>{
+  startBtn.style.display='none';
+  runIntro();
 });
 
-/* Replay intro */
-replayBtn.addEventListener('click', ()=>{
-  // reset states
-  [l1,l2,l3].forEach(e=>{ e.textContent=''; e.classList.remove('show'); e.style.opacity=1; });
-  introPlate.style.opacity = 1; introPlate.style.transform = 'translateY(0)'; zoomText.classList.remove('show'); zoomText.style.opacity=1;
-  mainVideo.pause(); mainVideo.currentTime = 0; mainVideo.classList.remove('playing'); introPlayed = false;
-  // restart particle spawners
-  clearInterval(heartSpawner); clearInterval(fireworkSpawner);
-  heartSpawner = setInterval(()=>spawnHeart(), 420);
-  fireworkSpawner = setInterval(()=>{ explodeAt(Math.random()*W, Math.random()*(H*0.45)+20) }, 1500);
-  playBtn.style.display = 'inline-block'; replayBtn.style.display = 'none';
+skipBtn.addEventListener('click',()=>{
+  introPlate.style.opacity=0;
+  zoomText.style.opacity=0;
+  startVideo();
 });
-
-/* Skip into video */
-skipBtn.addEventListener('click', ()=>{ introPlate.style.opacity=0; zoomText.style.opacity=0; startVideo(); });
-
-/* keep video looping elegantly */
-mainVideo.addEventListener('ended', ()=>{ mainVideo.currentTime = 0; mainVideo.play().catch(()=>{}); });
-
-/* tiny auto-teaser (no full intro) after short delay to tempt viewer */
-let teaserRan = false;
-setTimeout(async ()=>{
-  if(introPlayed) return;
-  teaserRan = true;
-  const teaser = "Marya — ek pal jo humesha rahega❤️😍...";
-  l1.textContent = '';
-  l1.style.opacity = 1;
-  for(let i=0;i<Math.min(40, teaser.length); i++){
-    l1.textContent += teaser[i];
-    await sleep(28);
-  }
-  // leave teaser, don't run full intro until user clicks Play
-}, 450);
-
-/* cleanup on unload */
-window.addEventListener('beforeunload', ()=>{ cancelAnimationFrame(rafId); clearInterval(heartSpawner); clearInterval(fireworkSpawner); });
-
-/* ensure canvases sized when DOM loaded */
-window.addEventListener('load', ()=>{ resizeAll(); initBokeh(); });
 </script>
 </body>
 </html>
